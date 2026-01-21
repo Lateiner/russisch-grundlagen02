@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch A1: Bild-Wort-Matching (Präposition НА)</title>
+    <style>
+        :root {
+            /* Farbschema: Grüntöne */
+            --primary-dark: #1b5e20;
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --bg-page: #e8f5e9;
+            --bg-card: #ffffff;
+            --text-main: #333;
+            --text-muted: #666;
+            
+            /* Statusfarben */
+            --success: #43a047;
+            --error: #e53935;
+            --neutral-btn: #f1f8e9;
+            --neutral-btn-hover: #dcedc8;
+
+            --radius: 12px;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 80px; /* Platz für Sticky Footer */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        .subtitle { margin-top: 5px; opacity: 0.9; font-weight: 300; }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Karte */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+            border-top: 5px solid var(--primary-light);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .emoji-display {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .german-word {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        /* Buttons innerhalb der Karte */
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            background-color: var(--neutral-btn);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background-color: var(--neutral-btn-hover);
+        }
+
+        /* States für Buttons */
+        .option-btn.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success) !important;
+            color: white !important;
+            border-color: #2e7d32 !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error) !important;
+            color: white !important;
+            border-color: #b71c1c !important;
+            opacity: 0.6;
+        }
+
+        /* Lösungstext (Russisch) */
+        .solution-text {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: bold;
+            padding: 8px;
+            background-color: #f1f8e9;
+            border-radius: 6px;
+            border: 1px dashed var(--primary-light);
+            display: none; /* Standardmäßig ausgeblendet */
+        }
+        
+        .hint-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        /* Footer Steuerung */
+        .controls-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .ctrl-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.1s;
+            min-width: 150px;
+        }
+
+        .ctrl-btn:active { transform: scale(0.95); }
+
+        .btn-check { background-color: var(--primary); color: white; }
+        .btn-reset { background-color: #cfd8dc; color: #455a64; }
+        .btn-solve { background-color: #ffb74d; color: #e65100; }
+
+        @media (max-width: 600px) {
+            .controls-footer { flex-direction: column; padding: 10px; }
+            .ctrl-btn { width: 100%; }
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Bild-Wort-Matching</h1>
+            <div class="subtitle">Bestimmen Sie den Fall für die Präposition НА ohne das russische Wort zu sehen.</div>
+        </header>
+
+        <div class="grid-container" id="cards-container">
+            <!-- Karten werden hier generiert -->
+        </div>
+    </div>
+
+    <!-- Steuerung unten -->
+    <div class="controls-footer">
+        <button class="ctrl-btn btn-check" onclick="checkAll()">Überprüfen</button>
+        <button class="ctrl-btn btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="ctrl-btn btn-solve" onclick="showAllSolutions()">Lösung anzeigen</button>
+    </div>
+
+<script>
+    // --- Daten ---
+    // cases: 'prep' (Präpositiv), 'acc' (Akkusativ), 'gen' (Genitiv - als Distraktor)
+    const data = [
+        {
+            emoji: "🏣",
+            german: "Auf der Post",
+            russian: "на почте",
+            case: "prep",
+            hint: "Wo? (Ort)"
+        },
+        {
+            emoji: "🎟️",
+            german: "Ins Konzert",
+            russian: "на концерт",
+            case: "acc",
+            hint: "Wohin? (Veranstaltung)"
+        },
+        {
+            emoji: "🪑",
+            german: "Auf dem Tisch",
+            russian: "на столе",
+            case: "prep",
+            hint: "Wo? (Oberfläche)"
+        },
+        {
+            emoji: "🚌",
+            german: "Mit dem Bus",
+            russian: "на автобусе",
+            case: "prep",
+            hint: "Womit? (Transport)"
+        },
+        {
+            emoji: "📅",
+            german: "Für morgen",
+            russian: "на завтра",
+            case: "acc",
+            hint: "Wann/Plan? (Zeit)"
+        },
+        {
+            emoji: "🏖️",
+            german: "Ans Meer",
+            russian: "на море",
+            case: "acc",
+            hint: "Wohin? (Richtung)"
+        },
+        {
+            emoji: "🧭",
+            german: "Im Norden",
+            russian: "на севере",
+            case: "prep",
+            hint: "Wo? (Himmelsrichtung)"
+        },
+        {
+            emoji: "📚",
+            german: "Auf das Regal",
+            russian: "на полку",
+            case: "acc",
+            hint: "Wohin? (Bewegung)"
+        },
+        {
+            emoji: "🎸",
+            german: "Gitarre spielen",
+            russian: "играть на гитаре",
+            case: "prep",
+            hint: "Instrument"
+        },
+        {
+            emoji: "🏢",
+            german: "Zur Arbeit",
+            russian: "на работу",
+            case: "acc",
+            hint: "Wohin? (Ziel)"
+        },
+        {
+            emoji: "🍽️",
+            german: "Für das Abendessen",
+            russian: "на ужин",
+            case: "acc",
+            hint: "Wofür? (Zweck)"
+        },
+        {
+            emoji: "🏟️",
+            german: "Im Stadion",
+            russian: "на стадионе",
+            case: "prep",
+            hint: "Wo? (Ort)"
+        }
+    ];
+
+    // --- Initialisierung ---
+    const container = document.getElementById('cards-container');
+    
+    // Benutzerauswahl speichern [Index] = 'prep' | 'acc' | 'gen'
+    let userSelections = new Array(data.length).fill(null);
+
+    function init() {
+        data.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div>
+                    <span class="emoji-display">${item.emoji}</span>
+                    <div class="german-word">${item.german}</div>
+                </div>
+                
+                <div>
+                    <div class="options-group" id="opts-${index}">
+                        <button class="option-btn" onclick="selectOption(${index}, 'prep')">Präpositiv (6. Fall)</button>
+                        <button class="option-btn" onclick="selectOption(${index}, 'acc')">Akkusativ (4. Fall)</button>
+                        <button class="option-btn" onclick="selectOption(${index}, 'gen')">Genitiv (2. Fall)</button>
+                    </div>
+                    
+                    <div class="solution-text" id="sol-${index}">
+                        ${item.russian}
+                        <div class="hint-text">${item.hint}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // --- Logik Funktionen ---
+
+    function selectOption(index, caseType) {
+        // Speichern
+        userSelections[index] = caseType;
+
+        // Visuelles Feedback (Selected State)
+        const group = document.getElementById(`opts-${index}`);
+        const btns = group.querySelectorAll('.option-btn');
+        
+        btns.forEach(btn => {
+            btn.classList.remove('selected', 'correct', 'wrong');
+            // Einfache Logik: Button Index mappen oder Text prüfen?
+            // Wir prüfen anhand des onclick handlers im HTML string schwer, 
+            // daher machen wir es über die Position oder Attribut.
+            // Einfacher: Wir setzen 'selected' nur auf den geklickten Button.
+        });
+
+        // Da wir beim Generieren keine IDs auf Buttons gesetzt haben, 
+        // müssen wir den geklickten Button finden.
+        // Wir nutzen hier einfachheitshalber die Event-Reihenfolge:
+        // (Präp=0, Akk=1, Gen=2)
+        let btnIdx = 0;
+        if(caseType === 'acc') btnIdx = 1;
+        if(caseType === 'gen') btnIdx = 2;
+        
+        btns[btnIdx].classList.add('selected');
+    }
+
+    function checkAll() {
+        data.forEach((item, index) => {
+            const selection = userSelections[index];
+            const group = document.getElementById(`opts-${index}`);
+            const btns = group.querySelectorAll('.option-btn');
+
+            // Reset colors first
+            btns.forEach(b => b.classList.remove('correct', 'wrong'));
+
+            if (!selection) return; // Nichts ausgewählt -> nichts tun
+
+            let selectedBtnIdx = (selection === 'prep') ? 0 : (selection === 'acc' ? 1 : 2);
+            let correctBtnIdx = (item.case === 'prep') ? 0 : (item.case === 'acc' ? 1 : 2);
+
+            if (selection === item.case) {
+                // Richtig
+                btns[selectedBtnIdx].classList.add('correct');
+            } else {
+                // Falsch
+                btns[selectedBtnIdx].classList.add('wrong');
+            }
+        });
+    }
+
+    function resetAll() {
+        userSelections.fill(null);
+        
+        // UI Reset
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(btn => btn.classList.remove('selected', 'correct', 'wrong'));
+
+        const allSolutions = document.querySelectorAll('.solution-text');
+        allSolutions.forEach(sol => sol.style.display = 'none');
+    }
+
+    function showAllSolutions() {
+        // Resetten, um sauberen Status zu haben
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(btn => btn.classList.remove('selected', 'correct', 'wrong'));
+
+        data.forEach((item, index) => {
+            const group = document.getElementById(`opts-${index}`);
+            const btns = group.querySelectorAll('.option-btn');
+            const solutionDiv = document.getElementById(`sol-${index}`);
+
+            // Richtigen Button grün markieren
+            let correctBtnIdx = (item.case === 'prep') ? 0 : (item.case === 'acc' ? 1 : 2);
+            btns[correctBtnIdx].classList.add('correct');
+
+            // Lösungstext einblenden
+            solutionDiv.style.display = 'block';
+        });
+    }
+
+    // Start
+    init();
+
+</script>
+
+</body>
+</html>
