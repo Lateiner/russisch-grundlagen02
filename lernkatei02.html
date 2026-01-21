@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch Vokabeltrainer</title>
+    <style>
+        :root {
+            /* Farbpalette (Grüntöne) */
+            --primary-color: #2e7d32;      /* Dunkles Grün */
+            --primary-light: #4caf50;      /* Standard Grün */
+            --primary-dark: #1b5e20;       /* Sehr dunkles Grün */
+            --accent-color: #a5d6a7;       /* Helles Pastellgrün */
+            --bg-color: #e8f5e9;           /* Sehr heller Hintergrund */
+            --card-bg: #ffffff;            /* Kartenhintergrund */
+            --text-color: #333333;
+            --text-muted: #666666;
+            --shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Fortschrittsanzeige */
+        .progress-container {
+            font-weight: bold;
+            color: var(--primary-color);
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* 3D Karten Szene */
+        .scene {
+            width: 100%;
+            height: 300px;
+            perspective: 1000px; /* Tiefe für den 3D Effekt */
+            cursor: pointer;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Klasse zum Umdrehen */
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card__face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Rückseite ausblenden wenn gedreht */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent-color);
+        }
+
+        .card__face--front {
+            /* Standard Vorderseite */
+        }
+
+        .card__face--back {
+            transform: rotateY(180deg);
+            background-color: #f1f8e9; /* Leicht anderer Ton für Rückseite */
+            border-color: var(--primary-light);
+        }
+
+        .card-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        .card-content {
+            font-size: 2.5rem;
+            font-weight: bold;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+
+        /* Dynamische Schriftgrößen */
+        .text-medium { font-size: 2rem; }
+        .text-small { font-size: 1.5rem; }
+        .text-tiny { font-size: 1.2rem; }
+
+        .hint {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            flex: 1; /* Buttons nehmen verfügbaren Platz */
+        }
+
+        button:hover {
+            background-color: var(--primary-light);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            flex: 0 1 auto; /* Sekundäre Buttons wachsen nicht so stark */
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-color);
+        }
+
+        /* Keyboard Info */
+        .keyboard-info {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        
+        kbd {
+            background-color: #eee;
+            border-radius: 3px;
+            border: 1px solid #b4b4b4;
+            box-shadow: 0 1px 1px rgba(0,0,0,.2), 0 2px 0 0 rgba(255,255,255,.7) inset;
+            color: #333;
+            display: inline-block;
+            font-size: .85em;
+            font-weight: 700;
+            line-height: 1;
+            padding: 2px 4px;
+            white-space: nowrap;
+        }
+
+        /* Mobile Anpassungen */
+        @media (max-width: 480px) {
+            .scene { height: 250px; }
+            .card-content { font-size: 2rem; }
+            .controls { gap: 10px; }
+            button { padding: 10px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Russisch Vokabeln</h1>
+            <div class="subtitle">Verwendung der Präposition НА</div>
+        </header>
+
+        <div class="progress-container" id="progressDisplay">1 / 59</div>
+
+        <!-- Karte -->
+        <div class="scene">
+            <div class="card" id="card">
+                <!-- Vorderseite -->
+                <div class="card__face card__face--front">
+                    <span class="card-label">Russisch</span>
+                    <div class="card-content" id="frontText">авто́бус</div>
+                </div>
+                <!-- Rückseite -->
+                <div class="card__face card__face--back">
+                    <span class="card-label">Deutsch</span>
+                    <div class="card-content" id="backText">der Bus</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="controls">
+            <button id="prevBtn" onclick="prevCard()">&#8592; Vorherige</button>
+            <button id="nextBtn" onclick="nextCard()">Nächste &#8594;</button>
+        </div>
+
+        <!-- Aktionen -->
+        <div class="actions">
+            <button class="btn-secondary" onclick="resetToStart()" title="Pos1 Taste">
+                &#8634; An den Anfang
+            </button>
+            <button class="btn-secondary" onclick="shuffleCards()">
+                &#10540; Mischen
+            </button>
+        </div>
+
+        <div class="keyboard-info">
+            <p>Tastatur: <kbd>&#8592;</kbd> <kbd>&#8594;</kbd> Navigation | <kbd>Leertaste</kbd> / <kbd>Enter</kbd> Umdrehen | <kbd>Pos1</kbd> Start</p>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DATEN ---
+        // Die Rohdaten aus der Vokabelliste
+        const rawData = [
+            "1.	авто́бус – der Bus",
+            "2.	бале́т – das Ballett",
+            "3.	банк – die Bank (Geldinstitut)",
+            "4.	биле́т – die Eintrittskarte / das Ticket",
+            "5.	брат – der Bruder",
+            "6.	быть – sein",
+            "7.	ве́чер – der Abend",
+            "8.	висе́ть – hängen",
+            "9.	вы́ставка – die Ausstellung",
+            "10.	гита́ра – die Gitarre",
+            "11.	год – das Jahr",
+            "12.	де́ньги – das Geld",
+            "13.	де́ти – die Kinder",
+            "14.	дискоте́ка – die Diskothek",
+            "15.	домо́й – nach Hause",
+            "16.	доро́же – teurer",
+            "17.	друг – der Freund",
+            "18.	е́хать – fahren (mit einem Transportmittel)",
+            "19.	за́втра – morgen",
+            "20.	игра́ть – spielen",
+            "21.	идти́ – gehen (zu Fuß)",
+            "22.	карти́на – das Bild / das Gemälde",
+            "23.	класть – legen (unvollendet)",
+            "24.	кни́га – das Buch",
+            "25.	конце́рт – das Konzert",
+            "26.	купи́ть – kaufen",
+            "27.	лежа́ть – liegen",
+            "28.	метро́ – die U-Bahn",
+            "29.	мо́ре – das Meer",
+            "30.	наде́яться – hoffen / sich verlassen",
+            "31.	неде́ля – die Woche",
+            "32.	нос – die Nase",
+            "33.	очки́ – die Brille",
+            "34.	план – der Plan",
+            "35.	положи́ть – legen (vollendet)",
+            "36.	проду́кты – die Lebensmittel",
+            "37.	про́шлый – vergangen / letzter",
+            "38.	рабо́та – die Arbeit",
+            "39.	рассве́т – der Sonnenaufgang / das Morgengrauen",
+            "40.	рубль – der Rubel",
+            "41.	ру́сский – russisch",
+            "42.	сейча́с – jetzt",
+            "43.	смотре́ть – schauen / sehen",
+            "44.	стадио́н – das Stadion",
+            "45.	ста́рше – älter",
+            "46.	стена́ – die Wand",
+            "47.	стол – der Tisch",
+            "48.	студе́нт – der Student",
+            "49.	суббо́та – der Samstag",
+            "50.	трамва́й – die Straßenbahn",
+            "51.	Ура́л – der Ural",
+            "52.	у́лица – die Straße / draußen",
+            "53.	у́жин – das Abendessen",
+            "54.	учи́ться – lernen / studieren",
+            "55.	факульте́т – die Fakultät",
+            "56.	фотогра́фия – das Foto",
+            "57.	хоте́ть – wollen",
+            "58.	центр – das Zentrum",
+            "59.	час – die Stunde"
+        ];
+
+        // Daten parsen (Format: "Nummer. Russisch – Deutsch")
+        const cardsData = rawData.map(line => {
+            // Entferne Nummer am Anfang (z.B. "1. ")
+            let cleanLine = line.replace(/^\d+\.\s+/, "");
+            // Trenne bei " – "
+            let parts = cleanLine.split(" – ");
+            if (parts.length >= 2) {
+                return {
+                    front: parts[0].trim(),
+                    back: parts[1].trim()
+                };
+            }
+            return null;
+        }).filter(item => item !== null);
+
+        // --- 2. ZUSTAND (STATE) ---
+        let currentDeck = [...cardsData]; // Kopie für das aktuelle Deck (kann gemischt werden)
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        // --- 3. DOM ELEMENTE ---
+        const cardElement = document.getElementById('card');
+        const frontText = document.getElementById('frontText');
+        const backText = document.getElementById('backText');
+        const progressDisplay = document.getElementById('progressDisplay');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // --- 4. FUNKTIONEN ---
+
+        // Textgröße anpassen, wenn der Inhalt lang ist
+        function adjustFontSize(element, text) {
+            element.classList.remove('text-medium', 'text-small', 'text-tiny');
+            
+            // Heuristik basierend auf Zeichenlänge
+            if (text.length > 30) {
+                element.classList.add('text-tiny');
+            } else if (text.length > 15) {
+                element.classList.add('text-small');
+            } else {
+                // Standardgröße
+            }
+        }
+
+        // Karte rendern (anzeigen)
+        function renderCard() {
+            const card = currentDeck[currentIndex];
+            
+            // Text setzen
+            frontText.textContent = card.front;
+            backText.textContent = card.back;
+
+            // Schriftgröße anpassen
+            adjustFontSize(frontText, card.front);
+            adjustFontSize(backText, card.back);
+
+            // Fortschritt aktualisieren
+            progressDisplay.textContent = `${currentIndex + 1} / ${currentDeck.length}`;
+
+            // Buttons aktualisieren (optional: deaktivieren am Anfang/Ende)
+            prevBtn.disabled = currentIndex === 0;
+            // Nächste disablen wir nicht, wir könnten auch loopen, aber hier stoppen wir am Ende
+            nextBtn.disabled = currentIndex === currentDeck.length - 1;
+
+            // Sicherstellen, dass die Vorderseite angezeigt wird, wenn man die Karte wechselt
+            if (isFlipped) {
+                cardElement.classList.remove('is-flipped');
+                isFlipped = false;
+            }
+        }
+
+        // Karte umdrehen
+        function flipCard() {
+            isFlipped = !isFlipped;
+            if (isFlipped) {
+                cardElement.classList.add('is-flipped');
+            } else {
+                cardElement.classList.remove('is-flipped');
+            }
+        }
+
+        // Zur nächsten Karte
+        function nextCard() {
+            if (currentIndex < currentDeck.length - 1) {
+                // Kleine Verzögerung, damit man sieht, dass die Karte zurückdreht (optional)
+                cardElement.classList.remove('is-flipped');
+                isFlipped = false;
+                
+                setTimeout(() => {
+                    currentIndex++;
+                    renderCard();
+                }, 200); // 200ms warten für flüssigeren Übergang
+            }
+        }
+
+        // Zur vorherigen Karte
+        function prevCard() {
+            if (currentIndex > 0) {
+                cardElement.classList.remove('is-flipped');
+                isFlipped = false;
+                
+                setTimeout(() => {
+                    currentIndex--;
+                    renderCard();
+                }, 200);
+            }
+        }
+
+        // An den Anfang springen
+        function resetToStart() {
+            currentIndex = 0;
+            cardElement.classList.remove('is-flipped');
+            isFlipped = false;
+            // Kurze Verzögerung für Animation
+            setTimeout(() => {
+                renderCard();
+            }, 300);
+        }
+
+        // Mischen (Fisher-Yates Shuffle)
+        function shuffleCards() {
+            // Array kopieren
+            let array = [...currentDeck];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            currentDeck = array;
+            // Nach Mischen zum Anfang springen
+            resetToStart();
+        }
+
+        // --- 5. EVENT LISTENERS ---
+
+        // Klick auf Karte zum Umdrehen
+        cardElement.addEventListener('click', flipCard);
+
+        // Tastatursteuerung
+        document.addEventListener('keydown', (e) => {
+            // Verhindern, dass Space die Seite scrollt
+            if (e.code === 'Space') {
+                e.preventDefault();
+                flipCard();
+            }
+            if (e.code === 'Enter') {
+                flipCard();
+            }
+            if (e.code === 'ArrowRight') {
+                nextCard();
+            }
+            if (e.code === 'ArrowLeft') {
+                prevCard();
+            }
+            if (e.code === 'Home') {
+                resetToStart();
+            }
+        });
+
+        // --- 6. INITIALISIERUNG ---
+        renderCard();
+
+    </script>
+</body>
+</html>
