@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Präposition НА</title>
+    <!-- Polyfill für Touch-Geräte -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #c0392b;
+            --bg-color: #f4f6f7;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Einführungskarte */
+        .intro-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        h1 { text-align: center; color: var(--primary-color); }
+        h2 { border-bottom: 2px solid var(--bg-color); padding-bottom: 10px; margin-top: 0; }
+        h3 { color: var(--accent-color); margin-top: 30px; }
+
+        .grammar-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        /* Übungscontainer */
+        .exercise-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .exercise-number {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        /* Interaktive Elemente */
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px;
+            font-size: 1rem;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 1rem;
+        }
+
+        .feedback-icon {
+            display: inline-block;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        .correct-input {
+            border-color: var(--success-color) !important;
+            background-color: #e8f8f5;
+        }
+
+        .incorrect-input {
+            border-color: var(--error-color) !important;
+            background-color: #fdedec;
+        }
+
+        /* Buttons */
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .btn-check { background-color: var(--accent-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solve { background-color: #f39c12; color: white; }
+
+        /* Drag and Drop Styles */
+        .dd-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .draggables {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            min-height: 50px;
+            width: 100%;
+        }
+
+        .draggable {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: move;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+        }
+
+        .dropzones {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .dropzone {
+            flex: 1;
+            min-width: 200px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 5px;
+            padding: 10px;
+            min-height: 100px;
+            background-color: #fbfbfb;
+        }
+
+        .dropzone h4 { margin-top: 0; text-align: center; color: #7f8c8d; }
+
+        /* Radio Group Styling */
+        .radio-group label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        /* Cloze Text */
+        .cloze-text {
+            line-height: 2.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Russische Grammatik: Die Präposition НА</h1>
+
+    <div class="intro-card">
+        <h2>Einführung</h2>
+        <p>Die Präposition <strong>НА</strong> wird im Russischen hauptsächlich mit zwei Fällen verwendet: dem <strong>Präpositiv</strong> (6. Fall) und dem <strong>Akkusativ</strong> (4. Fall).</p>
+        
+        <div class="grammar-box">
+            <strong>1. Ort (Wo? - Где?) ➔ Präpositiv</strong><br>
+            Verwendung bei offenen Plätzen, Veranstaltungen oder auf Oberflächen.<br>
+            Beispiele: на столе (auf dem Tisch), на концерте (auf dem Konzert), на работе (bei der Arbeit).
+        </div>
+
+        <div class="grammar-box">
+            <strong>2. Richtung (Wohin? - Куда?) ➔ Akkusativ</strong><br>
+            Verwendung bei Bewegung zu einem Ziel.<br>
+            Beispiele: на стол (auf den Tisch), на концерт (zum Konzert), на работу (zur Arbeit).
+        </div>
+
+        <div class="grammar-box">
+            <strong>Weitere wichtige Verwendungen:</strong><br>
+            <ul>
+                <li><strong>Transport (Womit?):</strong> Präpositiv ➔ на автобусе (mit dem Bus).</li>
+                <li><strong>Zeitplanung (Für wie lange?):</strong> Akkusativ ➔ на неделю (für eine Woche).</li>
+                <li><strong>Zeitpunkt (Wann?):</strong> Präpositiv ➔ на этой неделе (in dieser Woche).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Übung 1: Ort oder Richtung (Dropdown) -->
+    <div class="exercise-card" id="ex1">
+        <h3><span class="exercise-number">1</span>Ort oder Richtung?</h3>
+        <p>Wählen Sie den richtigen Fall basierend auf der Bedeutung (Wo? vs. Wohin?).</p>
+        <div class="task-row">
+            1. Книга лежит <select data-correct="на столе">
+                <option value="">---</option>
+                <option value="на стол">на стол</option>
+                <option value="на столе">на столе</option>
+            </select> (Wo?).
+        </div>
+        <div class="task-row">
+            2. Я кладу книгу <select data-correct="на стол">
+                <option value="">---</option>
+                <option value="на стол">на стол</option>
+                <option value="на столе">на столе</option>
+            </select> (Wohin?).
+        </div>
+        <div class="task-row">
+            3. Дети играют <select data-correct="на улице">
+                <option value="">---</option>
+                <option value="на улицу">на улицу</option>
+                <option value="на улице">на улице</option>
+            </select>.
+        </div>
+        <div class="task-row">
+            4. Мы идем <select data-correct="на улицу">
+                <option value="">---</option>
+                <option value="на улицу">на улицу</option>
+                <option value="на улице">на улице</option>
+            </select>.
+        </div>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex1')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex1')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex1')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 2: Fallbestimmung (Radio Buttons) -->
+    <div class="exercise-card" id="ex2">
+        <h3><span class="exercise-number">2</span>Welcher Fall ist das?</h3>
+        <p>Bestimmen Sie den Fall des Substantivs nach НА.</p>
+        
+        <div class="radio-group" data-correct="akk">
+            <strong>1. Мы едем на море.</strong><br>
+            <label><input type="radio" name="ex2_1" value="prep"> Präpositiv (Wo?)</label>
+            <label><input type="radio" name="ex2_1" value="akk"> Akkusativ (Wohin?)</label>
+        </div>
+        <hr>
+        <div class="radio-group" data-correct="prep">
+            <strong>2. Мы сейчас на море.</strong><br>
+            <label><input type="radio" name="ex2_2" value="prep"> Präpositiv (Wo?)</label>
+            <label><input type="radio" name="ex2_2" value="akk"> Akkusativ (Wohin?)</label>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkRadios('ex2')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRadios('ex2')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionRadios('ex2')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 3: Transportmittel (Text Input) -->
+    <div class="exercise-card" id="ex3">
+        <h3><span class="exercise-number">3</span>Transportmittel</h3>
+        <p>Ergänzen Sie die Endungen im Präpositiv. (Schreiben Sie das ganze Wort).</p>
+        <p>Beispiel: Я еду на <i>машине</i> (машина).</p>
+        
+        <div>1. Я еду на работу на <input type="text" data-correct="автобусе"> (автобус).</div>
+        <div>2. Мы едем домой на <input type="text" data-correct="трамвае"> (трамвай).</div>
+        <div>3. Они едут в центр на <input type="text" data-correct="метро"> (метро - unveränderlich!).</div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex3')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex3')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex3')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 4: Drag & Drop (Zeit) -->
+    <div class="exercise-card" id="ex4">
+        <h3><span class="exercise-number">4</span>Zeit: Zeitpunkt oder Dauer?</h3>
+        <p>Ziehen Sie die Ausdrücke in die richtige Kategorie.</p>
+        
+        <div class="dd-container">
+            <div class="draggables" id="ex4-source" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="draggable" draggable="true" ondragstart="drag(event)" id="d1" data-target="zone-acc">план на завтра</div>
+                <div class="draggable" draggable="true" ondragstart="drag(event)" id="d2" data-target="zone-prep">на прошлой неделе</div>
+                <div class="draggable" draggable="true" ondragstart="drag(event)" id="d3" data-target="zone-acc">ехать на год</div>
+                <div class="draggable" draggable="true" ondragstart="drag(event)" id="d4" data-target="zone-prep">на рассвете</div>
+            </div>
+            
+            <div class="dropzones">
+                <div class="dropzone" id="zone-prep" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <h4>Wann? (Präpositiv)</h4>
+                </div>
+                <div class="dropzone" id="zone-acc" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <h4>Wofür/Wie lange? (Akkusativ)</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkDragDrop('ex4')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetDragDrop('ex4')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionDragDrop('ex4')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 5: Verben und Präpositionen -->
+    <div class="exercise-card" id="ex5">
+        <h3><span class="exercise-number">5</span>Feste Verbindungen</h3>
+        <p>Welches Nomen passt zum Verb? Achten Sie auf den Sinn und den Kasus.</p>
+        
+        <div class="task-row">
+            1. Играть на <select data-correct="гитаре">
+                <option value="">---</option>
+                <option value="гитару">гитару</option>
+                <option value="гитаре">гитаре</option>
+            </select> (Musikinstrument).
+        </div>
+        <div class="task-row">
+            2. Надеяться на <select data-correct="друга">
+                <option value="">---</option>
+                <option value="друга">друга</option>
+                <option value="друге">друге</option>
+            </select> (sich auf einen Freund verlassen/hoffen).
+        </div>
+        <div class="task-row">
+            3. Смотреть на <select data-correct="картину">
+                <option value="">---</option>
+                <option value="картину">картину</option>
+                <option value="картине">картине</option>
+            </select> (auf das Bild schauen).
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex5')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex5')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex5')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 6: Endungen ergänzen -->
+    <div class="exercise-card" id="ex6">
+        <h3><span class="exercise-number">6</span>Endungen ergänzen</h3>
+        <p>Vervollständigen Sie nur die Endung. Wenn keine Endung nötig ist (bei Konsonant im Akkusativ), lassen Sie das Feld leer.</p>
+        
+        <div>1. Студент идет на факультет<input type="text" data-correct="" style="width: 30px">. (Richtung)</div>
+        <div>2. Студент учится на факультет<input type="text" data-correct="е" style="width: 30px">. (Ort)</div>
+        <div>3. Мы идем на выставк<input type="text" data-correct="у" style="width: 30px">. (Richtung)</div>
+        <div>4. Мы были на выставк<input type="text" data-correct="е" style="width: 30px">. (Ort)</div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex6')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex6')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex6')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 7: Satzbau (Multiple Choice) -->
+    <div class="exercise-card" id="ex7">
+        <h3><span class="exercise-number">7</span>Satzvervollständigung</h3>
+        <p>Wählen Sie die logisch richtige Fortsetzung.</p>
+
+        <div class="radio-group" data-correct="opt1">
+            <strong>1. Где твои очки?</strong><br>
+            <label><input type="radio" name="ex7_1" value="opt1"> Они лежат на носу.</label>
+            <label><input type="radio" name="ex7_1" value="opt2"> Они лежат на нос.</label>
+        </div>
+        <hr>
+        <div class="radio-group" data-correct="opt2">
+            <strong>2. Куда ты хочешь поехать?</strong><br>
+            <label><input type="radio" name="ex7_2" value="opt1"> Я хочу поехать на Урале.</label>
+            <label><input type="radio" name="ex7_2" value="opt2"> Я хочу поехать на Урал.</label>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkRadios('ex7')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetRadios('ex7')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionRadios('ex7')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 8: Richtig oder Falsch? -->
+    <div class="exercise-card" id="ex8">
+        <h3><span class="exercise-number">8</span>Grammatikalisch korrekt?</h3>
+        <p>Entscheiden Sie, ob der Satz grammatikalisch richtig ist.</p>
+
+        <div class="task-row">
+            1. "Я положил деньги на банк." (Ich habe Geld auf die Bank gelegt.)
+            <select data-correct="falsch">
+                <option value="">---</option>
+                <option value="richtig">Richtig</option>
+                <option value="falsch">Falsch (man sagt "в банк")</option>
+            </select>
+        </div>
+        <div class="task-row">
+            2. "Фотография висит на стене." (Das Foto hängt an der Wand.)
+            <select data-correct="richtig">
+                <option value="">---</option>
+                <option value="richtig">Richtig</option>
+                <option value="falsch">Falsch</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex8')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex8')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex8')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 9: Übersetzung -->
+    <div class="exercise-card" id="ex9">
+        <h3><span class="exercise-number">9</span>Übersetzung</h3>
+        <p>Wählen Sie die korrekte russische Übersetzung für den deutschen Ausdruck.</p>
+        
+        <div class="task-row">
+            1. "Für morgen" (Plan) <select data-correct="на завтра">
+                <option value="">---</option>
+                <option value="на завтра">на завтра</option>
+                <option value="на завтрашнем">на завтрашнем</option>
+            </select>
+        </div>
+        <div class="task-row">
+            2. "Auf Russisch" (sprechen) <select data-correct="на русском">
+                <option value="">---</option>
+                <option value="на русский">на русский</option>
+                <option value="на русском">на русском</option>
+            </select>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex9')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex9')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex9')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 10: Zweck (Fill in) -->
+    <div class="exercise-card" id="ex10">
+        <h3><span class="exercise-number">10</span>Zweck / Wofür?</h3>
+        <p>Setzen Sie das Wort in Klammern in den richtigen Fall (НА + Akkusativ).</p>
+        
+        <div>1. Это деньги на <input type="text" data-correct="книгу"> (книга).</div>
+        <div>2. У нас есть билеты на <input type="text" data-correct="балет"> (балет).</div>
+        <div>3. Я купил продукты на <input type="text" data-correct="ужин"> (ужин).</div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex10')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex10')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex10')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 11: Vergleich (Unterschied) -->
+    <div class="exercise-card" id="ex11">
+        <h3><span class="exercise-number">11</span>Vergleich / Unterschied</h3>
+        <p>Ergänzen Sie. Beispiel: älter <u>um</u> ein Jahr = старше <u>на</u> год.</p>
+        
+        <div>1. Мой брат старше меня на <input type="text" data-correct="год"> (год).</div>
+        <div>2. Эта книга дороже на <input type="text" data-correct="рубль"> (рубль).</div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex11')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex11')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex11')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+    <!-- Übung 12: Lückentext (Korrigiert) -->
+    <div class="exercise-card" id="ex12">
+        <h3><span class="exercise-number">12</span>Lückentext</h3>
+        <p>Füllen Sie die Lücken aus (ganze Wörter im richtigen Kasus).</p>
+        
+        <div class="cloze-text">
+            Завтра суббота. Я не иду <input type="text" data-correct="на работу" style="width: 100px"> (на / работа). 
+            Я еду <input type="text" data-correct="на стадион" style="width: 100px"> (на / стадион). 
+            Там я буду <input type="text" data-correct="на стадионе" style="width: 100px"> (на / стадион) два часа.
+            Вечером мы идем <input type="text" data-correct="на дискотеку" style="width: 120px"> (на / дискотека).
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkInputs('ex12')">Überprüfen</button>
+            <button class="btn-reset" onclick="resetExercise('ex12')">Zurücksetzen</button>
+            <button class="btn-solve" onclick="showSolutionInputs('ex12')">Lösung anzeigen</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /* --- Allgemeine Funktionen --- */
+
+    // Funktion für Text-Inputs und Select-Dropdowns
+    function checkInputs(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const inputs = container.querySelectorAll('input[type="text"], select');
+
+        inputs.forEach(input => {
+            const userAnswer = input.value.trim().toLowerCase();
+            const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+
+            input.classList.remove('correct-input', 'incorrect-input');
+
+            if (userAnswer === correctAnswer) {
+                input.classList.add('correct-input');
+            } else {
+                input.classList.add('incorrect-input');
+            }
+        });
+    }
+
+    function showSolutionInputs(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const inputs = container.querySelectorAll('input[type="text"], select');
+
+        inputs.forEach(input => {
+            const correctAnswer = input.getAttribute('data-correct');
+            input.value = correctAnswer;
+            input.classList.remove('correct-input', 'incorrect-input');
+        });
+    }
+
+    function resetExercise(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const inputs = container.querySelectorAll('input[type="text"], select');
+
+        inputs.forEach(input => {
+            input.value = "";
+            input.classList.remove('correct-input', 'incorrect-input');
+        });
+    }
+
+    // Funktion für Radio Buttons
+    function checkRadios(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const groups = container.querySelectorAll('.radio-group');
+
+        groups.forEach(group => {
+            const correctValue = group.getAttribute('data-correct');
+            const selected = group.querySelector('input:checked');
+            const allRadios = group.querySelectorAll('input');
+
+            // Reset styles
+            allRadios.forEach(r => r.parentElement.style.color = 'inherit');
+
+            if (selected) {
+                if (selected.value === correctValue) {
+                    selected.parentElement.style.color = 'var(--success-color)';
+                    selected.parentElement.style.fontWeight = 'bold';
+                } else {
+                    selected.parentElement.style.color = 'var(--error-color)';
+                    selected.parentElement.style.textDecoration = 'line-through';
+                }
+            }
+        });
+    }
+
+    function showSolutionRadios(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const groups = container.querySelectorAll('.radio-group');
+
+        groups.forEach(group => {
+            const correctValue = group.getAttribute('data-correct');
+            const radios = group.querySelectorAll('input');
+            radios.forEach(r => {
+                r.parentElement.style.color = 'inherit';
+                r.parentElement.style.textDecoration = 'none';
+                r.parentElement.style.fontWeight = 'normal';
+                if (r.value === correctValue) {
+                    r.checked = true;
+                }
+            });
+        });
+    }
+
+    function resetRadios(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const radios = container.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => {
+            r.checked = false;
+            r.parentElement.style.color = 'inherit';
+            r.parentElement.style.textDecoration = 'none';
+            r.parentElement.style.fontWeight = 'normal';
+        });
+    }
+
+    /* --- Drag & Drop Logik --- */
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedElement = document.getElementById(data);
+        
+        // Finde das nÃ¤chste Dropzone-Element (falls auf ein Kind-Element gedroppt wird)
+        var target = ev.target;
+        while (target && !target.classList.contains('dropzone') && !target.classList.contains('draggables')) {
+            target = target.parentElement;
+        }
+
+        if (target) {
+            target.appendChild(draggedElement);
+        }
+    }
+
+    function checkDragDrop(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const draggables = container.querySelectorAll('.draggable');
+
+        draggables.forEach(el => {
+            const correctZone = el.getAttribute('data-target');
+            const parentId = el.parentElement.id;
+
+            el.style.backgroundColor = '';
+            el.style.color = '';
+
+            // Wenn es noch im Quellcontainer ist, ignorieren oder als falsch markieren
+            if (parentId.includes('source')) {
+                return; 
+            }
+
+            if (parentId === correctZone) {
+                el.style.backgroundColor = '#e8f8f5';
+                el.style.borderColor = '#27ae60';
+            } else {
+                el.style.backgroundColor = '#fdedec';
+                el.style.borderColor = '#c0392b';
+            }
+        });
+    }
+
+    function showSolutionDragDrop(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const draggables = container.querySelectorAll('.draggable');
+
+        draggables.forEach(el => {
+            const targetZoneId = el.getAttribute('data-target');
+            const targetZone = document.getElementById(targetZoneId);
+            targetZone.appendChild(el);
+            
+            // Styles zurücksetzen
+            el.style.backgroundColor = '';
+            el.style.borderColor = '';
+        });
+    }
+
+    function resetDragDrop(exerciseId) {
+        const container = document.getElementById(exerciseId);
+        const source = container.querySelector('.draggables'); // Der Quellcontainer
+        const draggables = container.querySelectorAll('.draggable');
+
+        draggables.forEach(el => {
+            source.appendChild(el);
+            el.style.backgroundColor = '';
+            el.style.borderColor = '';
+        });
+    }
+
+</script>
+
+</body>
+</html>
