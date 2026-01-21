@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch A1: Endungen ergänzen (Präposition НА)</title>
+    <style>
+        :root {
+            /* Farbschema: Grüntöne */
+            --primary-dark: #1b5e20;
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-bg: #e8f5e9;
+            --card-bg: #ffffff;
+            
+            /* Statusfarben */
+            --correct: #43a047;
+            --wrong: #e53935;
+            --neutral: #333;
+            
+            --radius: 12px;
+            --shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--neutral);
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 100px; /* Platz für Footer */
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        .subtitle { margin-top: 5px; opacity: 0.9; font-weight: 300; }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Karte Design */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s;
+            border-top: 5px solid var(--primary-light);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .emoji {
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+            min-height: 1.2em;
+        }
+
+        /* Der Satz/Wortstamm Bereich */
+        .word-container {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+
+        .gap {
+            display: inline-block;
+            min-width: 40px;
+            border-bottom: 3px solid #ccc;
+            margin-left: 2px;
+            color: var(--primary);
+            text-align: center;
+            padding: 0 5px;
+            transition: all 0.3s;
+        }
+
+        /* Status der Lücke */
+        .gap.filled { border-bottom-color: var(--primary); }
+        .gap.correct { color: var(--correct); border-bottom-color: var(--correct); }
+        .gap.wrong { color: var(--wrong); border-bottom-color: var(--wrong); }
+
+        /* Buttons */
+        .options-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .end-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            background-color: #f9f9f9;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+        }
+
+        .end-btn:hover {
+            background-color: #e8f5e9;
+            border-color: var(--primary-light);
+        }
+
+        .end-btn.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        /* Footer Controls */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .ctrl-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            min-width: 140px;
+            transition: opacity 0.2s;
+        }
+
+        .ctrl-btn:hover { opacity: 0.9; }
+
+        .btn-check { background-color: var(--primary); color: white; }
+        .btn-reset { background-color: #cfd8dc; color: #455a64; }
+        .btn-solve { background-color: #ffb74d; color: #e65100; }
+
+        @media (max-width: 600px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .controls { flex-direction: column; padding: 10px; }
+            .ctrl-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Morphologie: Endungen</h1>
+            <div class="subtitle">Ergänze die passende Endung für die Präposition НА.<br>Achte auf Ort (Wo?) vs. Richtung (Wohin?).</div>
+        </header>
+
+        <div class="grid-container" id="cards-container">
+            <!-- Karten werden per JS generiert -->
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="ctrl-btn btn-check" onclick="checkAnswers()">Überprüfen</button>
+        <button class="ctrl-btn btn-reset" onclick="resetAll()">Zurücksetzen</button>
+        <button class="ctrl-btn btn-solve" onclick="showSolution()">Lösung anzeigen</button>
+    </div>
+
+<script>
+    /*
+     * Datenstruktur
+     * stem: Wortstamm
+     * correct: Richtige Endung
+     * options: Array aller Optionen (inkl. richtiger)
+     * hint: Kontext (Ort oder Richtung)
+     * Ø = Nullendung (wird als Symbol angezeigt)
+     */
+    const exercises = [
+        {
+            emoji: "🍽️",
+            hint: "Das Buch liegt auf dem Tisch (Ort)",
+            stem: "на стол",
+            correct: "е",
+            options: ["е", "у", "а"]
+        },
+        {
+            emoji: "🍽️",
+            hint: "Ich lege es auf den Tisch (Richtung)",
+            stem: "на стол",
+            correct: "Ø",
+            options: ["е", "у", "Ø"]
+        },
+        {
+            emoji: "🏢",
+            hint: "Wir arbeiten auf der Arbeit (Ort)",
+            stem: "на работ",
+            correct: "е",
+            options: ["е", "у", "а"]
+        },
+        {
+            emoji: "🏃‍♀️",
+            hint: "Ich gehe zur Arbeit (Richtung)",
+            stem: "на работ",
+            correct: "у",
+            options: ["е", "у", "ю"]
+        },
+        {
+            emoji: "🎸",
+            hint: "Wir sind auf dem Konzert (Ort)",
+            stem: "на концерт",
+            correct: "е",
+            options: ["е", "у", "а"]
+        },
+        {
+            emoji: "🎫",
+            hint: "Wir gehen ins Konzert (Richtung)",
+            stem: "на концерт",
+            correct: "Ø",
+            options: ["е", "у", "Ø"]
+        },
+        {
+            emoji: "🏘️",
+            hint: "Kinder spielen auf der Straße (Ort)",
+            stem: "на улиц",
+            correct: "е",
+            options: ["е", "у", "а"]
+        },
+        {
+            emoji: "🚶‍♂️",
+            hint: "Wir gehen auf die Straße (Richtung)",
+            stem: "на улиц",
+            correct: "у",
+            options: ["е", "у", "ы"]
+        },
+        {
+            emoji: "🧹",
+            hint: "Der Teppich liegt auf dem Boden (Ort - Ausnahme!)",
+            stem: "на пол",
+            correct: "у",
+            options: ["е", "у", "Ø"]
+        },
+        {
+            emoji: "📦",
+            hint: "Stell es auf den Boden (Richtung)",
+            stem: "на пол",
+            correct: "Ø",
+            options: ["е", "у", "Ø"]
+        },
+        {
+            emoji: "🖼️",
+            hint: "Wir sind auf der Ausstellung (Ort)",
+            stem: "на выставк",
+            correct: "е",
+            options: ["е", "у", "и"]
+        },
+        {
+            emoji: "🎨",
+            hint: "Wir gehen zur Ausstellung (Richtung)",
+            stem: "на выставк",
+            correct: "у",
+            options: ["е", "у", "а"]
+        }
+    ];
+
+    // Status speichern
+    let userSelections = new Array(exercises.length).fill(null);
+
+    // Initialisierung
+    const container = document.getElementById('cards-container');
+
+    function init() {
+        container.innerHTML = '';
+        exercises.forEach((ex, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            // Optionen zufällig mischen (optional, hier fix definiert für Kontrolle)
+            // const shuffledOptions = ex.options.sort(() => Math.random() - 0.5); 
+            // Wir lassen sie in definierter Reihenfolge für bessere Didaktik
+
+            let optionsHTML = '';
+            ex.options.forEach(opt => {
+                optionsHTML += `<button class="end-btn" onclick="selectOption(${index}, '${opt}', this)">${opt}</button>`;
+            });
+
+            card.innerHTML = `
+                <span class="emoji">${ex.emoji}</span>
+                <div class="hint">${ex.hint}</div>
+                <div class="word-container">
+                    ${ex.stem}<span class="gap" id="gap-${index}">_</span>
+                </div>
+                <div class="options-container" id="opts-${index}">
+                    ${optionsHTML}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Interaktion
+    function selectOption(cardIndex, value, btnElement) {
+        // Speichern
+        userSelections[cardIndex] = value;
+
+        // Gap aktualisieren
+        const gap = document.getElementById(`gap-${cardIndex}`);
+        gap.textContent = value;
+        gap.classList.remove('correct', 'wrong'); // Reset Feedback
+        gap.classList.add('filled');
+
+        // Buttons visuell umschalten
+        const optsContainer = document.getElementById(`opts-${cardIndex}`);
+        const buttons = optsContainer.querySelectorAll('.end-btn');
+        buttons.forEach(b => b.classList.remove('selected'));
+        
+        btnElement.classList.add('selected');
+    }
+
+    // Überprüfen
+    function checkAnswers() {
+        exercises.forEach((ex, index) => {
+            const selection = userSelections[index];
+            const gap = document.getElementById(`gap-${index}`);
+            
+            if (!selection) {
+                // Nichts ausgewählt
+                return; 
+            }
+
+            if (selection === ex.correct) {
+                gap.classList.add('correct');
+                gap.classList.remove('wrong');
+            } else {
+                gap.classList.add('wrong');
+                gap.classList.remove('correct');
+            }
+        });
+    }
+
+    // Zurücksetzen
+    function resetAll() {
+        userSelections.fill(null);
+        
+        exercises.forEach((ex, index) => {
+            // Gap reset
+            const gap = document.getElementById(`gap-${index}`);
+            gap.textContent = "_";
+            gap.className = 'gap'; // Alle Klassen entfernen
+
+            // Buttons reset
+            const optsContainer = document.getElementById(`opts-${index}`);
+            const buttons = optsContainer.querySelectorAll('.end-btn');
+            buttons.forEach(b => b.classList.remove('selected'));
+        });
+    }
+
+    // Lösung anzeigen
+    function showSolution() {
+        // Erst zurücksetzen, um sauberen Status zu haben
+        const allButtons = document.querySelectorAll('.end-btn');
+        allButtons.forEach(b => b.classList.remove('selected'));
+
+        exercises.forEach((ex, index) => {
+            // Gap füllen
+            const gap = document.getElementById(`gap-${index}`);
+            gap.textContent = ex.correct;
+            gap.className = 'gap filled correct';
+            
+            // Richtigen Button finden und markieren
+            const optsContainer = document.getElementById(`opts-${index}`);
+            const buttons = optsContainer.querySelectorAll('.end-btn');
+            
+            buttons.forEach(btn => {
+                if (btn.textContent === ex.correct) {
+                    btn.classList.add('selected');
+                }
+            });
+            
+            // State speichern, damit "Überprüfen" nicht spinnt
+            userSelections[index] = ex.correct;
+        });
+    }
+
+    // Start
+    window.onload = init;
+
+</script>
+
+</body>
+</html>
