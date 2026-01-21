@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russisch A1: Der Fehlerteufel (Präposition НА)</title>
+    <style>
+        :root {
+            /* Farbpalette: Grüntöne */
+            --primary-dark: #1b5e20;
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --bg-page: #e8f5e9;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --error-color: #d32f2f;
+            --success-color: #388e3c;
+            --accent-color: #a5d6a7;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        h1 { margin: 0; font-size: 1.8rem; }
+        .subtitle { margin-top: 10px; opacity: 0.9; font-weight: 300; }
+
+        /* Aufgaben-Karte */
+        .exercise-card {
+            background-color: var(--bg-card);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--primary-light);
+            transition: transform 0.2s;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .task-header {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* Der Satz mit dem Fehler */
+        .sentence-box {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 20px 0 10px 0;
+            font-weight: 500;
+        }
+
+        .error-highlight {
+            color: var(--error-color);
+            text-decoration: line-through;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .context {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        /* Auswahl-Buttons */
+        .options-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid var(--primary-light);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            min-width: 120px;
+            user-select: none;
+        }
+
+        .option-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .option-btn.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 3px var(--accent-color);
+        }
+
+        .option-btn.correct-mark {
+            background-color: var(--success-color) !important;
+            color: white !important;
+            border-color: #2e7d32 !important;
+        }
+
+        /* Steuerungs-Buttons */
+        .controls {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 0.9rem;
+            min-width: 140px;
+        }
+
+        .ctrl-btn:hover { opacity: 0.9; }
+
+        .btn-check { background-color: var(--primary); color: white; }
+        .btn-reset { background-color: #eceff1; color: #455a64; }
+        .btn-solve { background-color: #ffb74d; color: #e65100; }
+
+        /* Feedback Bereich */
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .feedback.success {
+            display: block;
+            background-color: #e8f5e9;
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback.error {
+            display: block;
+            background-color: #ffebee;
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .feedback.info {
+            display: block;
+            background-color: #fff3e0;
+            border: 1px solid #ff9800;
+            color: #ef6c00;
+        }
+
+        /* Responsive Anpassungen */
+        @media (max-width: 600px) {
+            .options-container {
+                flex-direction: column;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .sentence-box {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Der Fehlerteufel</h1>
+        <div class="subtitle">Korrigieren Sie die Fehler bei der Verwendung von НА</div>
+    </header>
+
+    <div id="exercises-wrapper">
+        <!-- Die Aufgaben werden hier per JavaScript generiert -->
+    </div>
+
+</div>
+
+<script>
+    /* 
+     * Datenstruktur für die Aufgaben 
+     * prefix: Satzteil vor dem Fehler
+     * error: Der fehlerhafte Teil
+     * suffix: Satzteil nach dem Fehler
+     * context: Deutsche Übersetzung
+     * options: Die 3 Antwortmöglichkeiten
+     * correctIndex: Index der richtigen Antwort (0, 1 oder 2)
+     * explanation: Grammatikalische Erklärung
+     */
+    const exercisesData = [
+        {
+            prefix: "Я иду",
+            error: "на работе",
+            suffix: ".",
+            context: "(Ich gehe zur Arbeit.)",
+            options: ["на работe", "на работу", "в работу"],
+            correctIndex: 1,
+            explanation: "Richtig! Bei einer Richtung (Wohin gehe ich?) benutzen wir <b>НА + Akkusativ</b>. 'Работа' wird zu 'работу'."
+        },
+        {
+            prefix: "Книга лежит",
+            error: "на стол",
+            suffix: ".",
+            context: "(Das Buch liegt auf dem Tisch.)",
+            options: ["на столе", "на стол", "в столе"],
+            correctIndex: 0,
+            explanation: "Korrekt! Hier geht es um einen Ort (Wo liegt es?). Wir brauchen <b>НА + Präpositiv</b>. Die Endung ist '-е' (на столе)."
+        },
+        {
+            prefix: "Вчера мы были",
+            error: "в концерте",
+            suffix: ".",
+            context: "(Gestern waren wir auf dem Konzert.)",
+            options: ["в концерт", "на концерте", "на концерт"],
+            correctIndex: 1,
+            explanation: "Genau! Bei Veranstaltungen (Konzert, Ballett, Unterricht) benutzen wir im Russischen fast immer die Präposition <b>НА</b> (im Präpositiv für den Ort)."
+        },
+        {
+            prefix: "Мы гуляем",
+            error: "в площади",
+            suffix: ".",
+            context: "(Wir spazieren auf dem Platz.)",
+            options: ["на площади", "в площадь", "на площадь"],
+            correctIndex: 0,
+            explanation: "Richtig! Offene Plätze und Straßen verlangen die Präposition <b>НА</b>. Da wir dort sind (Ort), steht es im Präpositiv: 'на площади'."
+        },
+        {
+            prefix: "Сейчас я",
+            error: "в почте",
+            suffix: ".",
+            context: "(Jetzt bin ich auf der Post.)",
+            options: ["на почту", "в почте", "на почте"],
+            correctIndex: 2,
+            explanation: "Sehr gut! 'Post' (почта) ist eine Institution, die traditionell mit <b>НА</b> verwendet wird, wenn man sich dort befindet."
+        },
+        {
+            prefix: "У меня экзамен",
+            error: "в следующей неделе",
+            suffix: ".",
+            context: "(Ich habe nächste Woche eine Prüfung.)",
+            options: ["на следующей неделе", "в следующую неделю", "на следующую неделю"],
+            correctIndex: 0,
+            explanation: "Korrekt! Zeitangaben mit 'Woche' (неделя) benutzen die Präposition <b>НА</b> + Präpositiv, um den Zeitpunkt 'in der Woche' auszudrücken."
+        }
+    ];
+
+    // Status-Speicher für Benutzereingaben
+    let userSelections = new Array(exercisesData.length).fill(null);
+
+    // Initialisierung
+    document.addEventListener('DOMContentLoaded', () => {
+        renderExercises();
+    });
+
+    function renderExercises() {
+        const wrapper = document.getElementById('exercises-wrapper');
+        
+        exercisesData.forEach((ex, index) => {
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            
+            card.innerHTML = `
+                <div class="task-header">Aufgabe ${index + 1}</div>
+                <div class="sentence-box">
+                    ${ex.prefix} <span class="error-highlight">${ex.error}</span> ${ex.suffix}
+                </div>
+                <div class="context">${ex.context}</div>
+                
+                <div class="options-container" id="opts-${index}">
+                    ${ex.options.map((opt, i) => `
+                        <button class="option-btn" onclick="selectOption(${index}, ${i})" id="btn-${index}-${i}">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="controls">
+                    <button class="ctrl-btn btn-check" onclick="checkAnswer(${index})">Überprüfen</button>
+                    <button class="ctrl-btn btn-reset" onclick="resetExercise(${index})">Zurücksetzen</button>
+                    <button class="ctrl-btn btn-solve" onclick="showSolution(${index})">Lösung anzeigen</button>
+                </div>
+
+                <div class="feedback" id="feedback-${index}"></div>
+            `;
+            
+            wrapper.appendChild(card);
+        });
+    }
+
+    // Funktion: Option auswählen
+    function selectOption(exIndex, optIndex) {
+        // Status speichern
+        userSelections[exIndex] = optIndex;
+
+        // Feedback ausblenden, falls vorhanden (neuer Versuch)
+        const feedbackEl = document.getElementById(`feedback-${exIndex}`);
+        if (!feedbackEl.classList.contains('info')) { // Wenn Lösung angezeigt wird, nicht verstecken
+             feedbackEl.className = 'feedback';
+             feedbackEl.innerHTML = '';
+        }
+
+        // Visuelles Update der Buttons
+        const container = document.getElementById(`opts-${exIndex}`);
+        const buttons = container.getElementsByClassName('option-btn');
+        
+        for (let btn of buttons) {
+            btn.classList.remove('selected', 'correct-mark');
+        }
+        
+        const selectedBtn = document.getElementById(`btn-${exIndex}-${optIndex}`);
+        selectedBtn.classList.add('selected');
+    }
+
+    // Funktion: Überprüfen
+    function checkAnswer(exIndex) {
+        const selection = userSelections[exIndex];
+        const feedbackEl = document.getElementById(`feedback-${exIndex}`);
+        
+        // Nichts ausgewählt?
+        if (selection === null) {
+            feedbackEl.className = 'feedback error';
+            feedbackEl.innerHTML = 'Bitte wählen Sie zuerst einen Korrekturvorschlag aus.';
+            return;
+        }
+
+        const isCorrect = selection === exercisesData[exIndex].correctIndex;
+
+        if (isCorrect) {
+            feedbackEl.className = 'feedback success';
+            feedbackEl.innerHTML = exercisesData[exIndex].explanation;
+            
+            // Optional: Button grün markieren
+            document.getElementById(`btn-${exIndex}-${selection}`).classList.add('correct-mark');
+        } else {
+            feedbackEl.className = 'feedback error';
+            feedbackEl.innerHTML = 'Leider falsch. Versuchen Sie es noch einmal oder schauen Sie sich die Lösung an.';
+        }
+    }
+
+    // Funktion: Zurücksetzen
+    function resetExercise(exIndex) {
+        userSelections[exIndex] = null;
+        
+        const container = document.getElementById(`opts-${exIndex}`);
+        const buttons = container.getElementsByClassName('option-btn');
+        for (let btn of buttons) {
+            btn.classList.remove('selected', 'correct-mark');
+        }
+
+        const feedbackEl = document.getElementById(`feedback-${exIndex}`);
+        feedbackEl.className = 'feedback';
+        feedbackEl.innerHTML = '';
+    }
+
+    // Funktion: Lösung anzeigen
+    function showSolution(exIndex) {
+        // Erst zurücksetzen
+        resetExercise(exIndex);
+        
+        const correctIndex = exercisesData[exIndex].correctIndex;
+        
+        // Richtigen Button markieren
+        const correctBtn = document.getElementById(`btn-${exIndex}-${correctIndex}`);
+        correctBtn.classList.add('selected', 'correct-mark');
+        
+        // Erklärung anzeigen
+        const feedbackEl = document.getElementById(`feedback-${exIndex}`);
+        feedbackEl.className = 'feedback info';
+        feedbackEl.innerHTML = '<b>Lösung:</b> ' + exercisesData[exIndex].explanation;
+        
+        // Auswahl setzen, damit man nicht nochmal klicken muss
+        userSelections[exIndex] = correctIndex;
+    }
+
+</script>
+
+</body>
+</html>
